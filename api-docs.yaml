@@ -1,0 +1,114 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080/
+  description: Generated server url
+paths:
+  /schema-transformation:
+    post:
+      operationId: schemaTransformation
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/SchemaTransformationRequest'
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SchemaTransformationResponse'
+components:
+  schemas:
+    AllOfItem:
+      type: object
+      properties:
+        type:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TypeProperty'
+        $ref:
+          type: string
+    Definitions:
+      type: object
+    Items:
+      type: object
+      properties:
+        type:
+          type: string
+        pattern:
+          type: string
+    Properties:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PropertiesData'
+        $ref:
+          type: string
+    PropertiesData:
+      type: object
+      properties:
+        allOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllOfItem'
+        oneOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllOfItem'
+        anyOf:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllOfItem'
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TypeProperty'
+        $ref:
+          type: string
+    SchemaTransformationRequest:
+      type: object
+      properties:
+        definitions:
+          $ref: '#/components/schemas/Definitions'
+        properties:
+          $ref: '#/components/schemas/Properties'
+    TypeProperty:
+      type: object
+      properties:
+        type:
+          type: string
+        pattern:
+          type: string
+        format:
+          type: string
+        items:
+          $ref: '#/components/schemas/Items'
+        $ref:
+          type: string
+    SchemaItem:
+      required:
+      - kind
+      - path
+      type: object
+      properties:
+        path:
+          type: string
+        kind:
+          type: string
+        ext:
+          type: object
+          additionalProperties:
+            type: object
+    SchemaTransformationResponse:
+      type: object
+      properties:
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/SchemaItem'
